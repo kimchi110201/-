@@ -1,3 +1,7 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+
+
 if (typeof window !== "undefined" && !window.storage) {
   const SECRET_SALT = "kimchi_super_secret_password_5678"; 
 
