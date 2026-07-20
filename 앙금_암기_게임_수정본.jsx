@@ -65,7 +65,7 @@ const SHOP_ITEMS = [
   { id: "box-large", type: "randombox", name: "미스터리 상자 (대)", desc: "10,000 ~ 110,000 포인트 중 무작위로 즉시 획득해요.", price: 50000, min: 10000, max: 110000 },
   { id: "title-luck", type: "title", name: "운의 신", desc: "프로필에 표시되는 전설의 칭호예요.", price: 500000 },
   { id: "reward-mentos", type: "reward", name: "멘토스", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 400000 },
-  { id: "reward-mychew-1", type: "reward", name: "마이쮸 1알", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 500000 },
+  { id: "reward-mychew-1", type: "reward", name: "마이쮸 1알", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 300000 },
   { id: "reward-mychew-pack", type: "reward", name: "마이쮸 1줄", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 700000 },
   { id: "reward-cyber-burger", type: "reward", name: "싸이버거 1개", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 900000 },
 ];
