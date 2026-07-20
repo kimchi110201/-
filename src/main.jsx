@@ -1,55 +1,49 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-
-// window.storage에 암호화(Base64) 기능 추가
 if (typeof window !== "undefined" && !window.storage) {
+  const SECRET_SALT = "kimchi_super_secret_password_5678"; 
+
   window.storage = {
     get: async (key) => {
+      const raw = localStorage.getItem(key);
+      if (!raw) return { value: null };
+
       try {
-        const raw = localStorage.getItem(key);
-        if (!raw) return { value: null };
-        // 외계어로 저장된 값을 다시 원래 글자로 해독(Decode)
-        const decrypted = atob(raw); 
-        return { value: decrypted };
+        
+        const decodedRaw = atob(raw);
+        const data = JSON.parse(decodedRaw);
+       
+        if (data.points !== undefined && data.check) {
+          const expectedCheck = btoa(data.points + SECRET_SALT);
+          if (data.check !== expectedCheck) {
+            alert("⚠️ 데이터 변조 감지! 초기화합니다.");
+            localStorage.clear();
+            return { value: null };
+          }
+        }
+        return { value: JSON.stringify(data.profileData) };
       } catch (e) {
+        
+        localStorage.clear();
         return { value: null };
       }
     },
     set: async (key, value) => {
       try {
-        // 원래 글자를 알아볼 수 없는 외계어로 암호화(Encode)
-        const encrypted = btoa(value); 
-        localStorage.setItem(key, encrypted);
+        const profileData = JSON.parse(value);
+        const points = profileData.points || 0;
+        const check = btoa(points + SECRET_SALT); 
+
+        const saveObject = {
+          profileData: profileData,
+          points: points,
+          check: check
+        };
+
+        
+        const encryptedRaw = btoa(JSON.stringify(saveObject));
+        localStorage.setItem(key, encryptedRaw);
       } catch (e) {
         console.error(e);
       }
     }
   };
 }
-
-// 바뀐 한글 파일 이름으로 정확하게 연결
-import App from '../앙금_암기_게임_수정본.jsx'
-
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-)
-
-// 마우스 우클릭 금지
-document.addEventListener('contextmenu', (obj) => {
-  obj.preventDefault();
-});
-
-// F12 및 주요 개발자 도구 단축키 금지
-document.addEventListener('keydown', (e) => {
-  if (
-    e.keyCode === 123 || // F12
-    (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
-    (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
-    (e.ctrlKey && e.keyCode === 85) // Ctrl+U (소스 보기)
-  ) {
-    e.preventDefault();
-    alert('개발자 도구를 사용할 수 없습니다.');
-  }
-});
