@@ -2,7 +2,34 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 // ==========================================
-// 🔤 한글(Unicode)을 안전하게 지원하는 암호화 함수
+// [보안 트릭 1] 마우스 우클릭 및 단축키 차단 (윈도우 + 맥 모두 대응)
+// ==========================================
+
+// 1. 마우스 오른쪽 클릭 금지
+document.addEventListener('contextmenu', (e) => {
+  e.preventDefault();
+});
+
+// 2. 개발자 도구 주요 단축키 금지
+document.addEventListener('keydown', (e) => {
+  // 윈도우용 단축키 체크 (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+  const isWindowsDevTools = 
+    e.keyCode === 123 || 
+    (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74)) || 
+    (e.ctrlKey && e.keyCode === 85);
+
+  // 맥용 단축키 체크 (Fn+F12, Cmd+Opt+I, Cmd+Opt+J, Cmd+Opt+U)
+  const isMacDevTools = 
+    (e.metaKey && e.altKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 85));
+
+  if (isWindowsDevTools || isMacDevTools) {
+    e.preventDefault();
+    alert('🔒 보안을 위해 개발자 도구 단축키 이용이 제한됩니다. 정당하게 승부하세요!');
+  }
+});
+
+// ==========================================
+// [보안 트릭 2] 데이터 무결성 체크 (위조 방지 + 한글 패치 완료)
 // ==========================================
 const encodeBase64 = (str) => {
   return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => {
@@ -16,13 +43,10 @@ const decodeBase64 = (str) => {
       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
   } catch (e) {
-    return null; // 올바르지 않은 암호화 형식이면 null 반환
+    return null;
   }
 };
 
-// ==========================================
-// [보안 트릭] 데이터 무결성 체크 (위조 방지 + 한글 패치 완료)
-// ==========================================
 if (typeof window !== "undefined" && !window.storage) {
   const SECRET_SALT = "kimchi_super_secret_password_5678"; 
 
@@ -32,10 +56,7 @@ if (typeof window !== "undefined" && !window.storage) {
       if (!raw) return { value: null };
 
       try {
-        // 한글 안전 디코딩 적용
         const decodedRaw = decodeBase64(raw);
-        
-        // 만약 옛날 데이터가 남아있어 디코딩에 실패했다면 안전하게 리셋
         if (!decodedRaw) {
           localStorage.removeItem(key);
           return { value: null };
@@ -43,7 +64,6 @@ if (typeof window !== "undefined" && !window.storage) {
 
         const data = JSON.parse(decodedRaw);
         
-       
         if (data.points !== undefined && data.check) {
           const expectedCheck = encodeBase64(data.points + SECRET_SALT);
           
@@ -55,7 +75,6 @@ if (typeof window !== "undefined" && !window.storage) {
         }
         return { value: JSON.stringify(data.profileData) };
       } catch (e) {
-        // 예기치 못한 에러 발생 시 앱이 죽지 않도록 방어하고 데이터 초기화
         localStorage.removeItem(key);
         return { value: null };
       }
@@ -64,8 +83,6 @@ if (typeof window !== "undefined" && !window.storage) {
       try {
         const profileData = JSON.parse(value);
         const points = profileData.points || 0;
-        
-        // 한글 안전 인코딩으로 도장 생성
         const check = encodeBase64(points + SECRET_SALT); 
 
         const saveObject = {
@@ -74,7 +91,6 @@ if (typeof window !== "undefined" && !window.storage) {
           check: check
         };
 
-        // 데이터 전체를 한글 안전 인코딩으로 감싸기
         const encryptedRaw = encodeBase64(JSON.stringify(saveObject));
         localStorage.setItem(key, encryptedRaw);
       } catch (e) {
