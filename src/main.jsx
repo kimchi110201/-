@@ -14,8 +14,8 @@ if (typeof window !== "undefined" && !window.storage) {
   };
 }
 
-// 루트에 있는 원래 앙금 게임 코드 불러오기
-import App from '../precipitate-memory-lab.jsx'
+// 💡 바뀐 한글 파일 이름으로 정확하게 연결해줍니다!
+import App from '../앙금_암기_게임_수정본.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
