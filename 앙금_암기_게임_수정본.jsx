@@ -67,7 +67,7 @@ const SHOP_ITEMS = [
   { id: "reward-mentos", type: "reward", name: "멘토스", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 400000 },
   { id: "reward-mychew-1", type: "reward", name: "마이쮸 1알", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 300000 },
   { id: "reward-mychew-pack", type: "reward", name: "마이쮸 1줄", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 700000 },
-  { id: "reward-cyber-burger", type: "reward", name: "싸이버거 1개", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 900000 },
+  { id: "reward-cyber-burger", type: "reward", name: "싸이버거 1개", desc: "실물 간식 교환권이에요. 구매 후 직접 확인받고 받아가세요.", price: 1100000 },
 ];
 
 const DEFAULT_PROFILE = {
